@@ -132,26 +132,32 @@
 
       drawTable(filtered);
     }
+
+    function getValueOrDash(id) {
+  const value = document.getElementById(id).value;
+  return value.trim() === "" ? "-" : value.trim();
+    }
+    
     async function addRow() {
     const values = [
       "-",  // No는 항상 "-"
-      document.getElementById("boxNo").value,
-      document.getElementById("dept").value,
-      document.getElementById("leader").value,
-      document.getElementById("category").value,
-      document.getElementById("vendor").value,
-      document.getElementById("storage").value,
-      document.getElementById("location").value,
-      document.getElementById("position").value,
-      document.getElementById("product").value,
-      document.getElementById("serial").value,
-      document.getElementById("status").value,
-      document.getElementById("qty").value,
-      document.getElementById("currentQty").value,
-      document.getElementById("owner").value,
-      document.getElementById("date").value,
-      document.getElementById("note").value,
-      document.getElementById("confirm").value
+    getValueOrDash("boxNo"),
+    getValueOrDash("dept"),
+    getValueOrDash("leader"),
+    getValueOrDash("category"),
+    getValueOrDash("vendor"),
+    getValueOrDash("storage"),
+    getValueOrDash("location"),
+    getValueOrDash("position"),
+    getValueOrDash("product"),
+    getValueOrDash("serial"),
+    getValueOrDash("status"),
+    getValueOrDash("qty"),
+    getValueOrDash("currentQty"),
+    getValueOrDash("owner"),
+    getValueOrDash("date"),
+    getValueOrDash("note"),
+    getValueOrDash("confirm")
     ];
 
     const res = await fetch("https://es2tech-stock-inventory.onrender.com/append", {
