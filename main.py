@@ -8,6 +8,25 @@ import json
 
 app = FastAPI()
 
+class EditRequest(BaseModel):
+    row_number: int
+    values: list[str]
+	
+@app.post("/edit")
+def edit_row(data: EditRequest):
+    service = get_service()  # Google API 인증 객체
+    sheet_id = "YOUR_SHEET_ID"
+    range_str = f"Sheet1!A{data.row_number}:R{data.row_number}"
+
+    result = service.spreadsheets().values().update(
+        spreadsheetId=sheet_id,
+        range=range_str,
+        valueInputOption="USER_ENTERED",
+        body={"values": [data.values]}
+    ).execute()
+	return {"status": "수정됨", "updatedCells": result.get("updatedCells", 0)}
+
+
 # CORS 설정 추가
 app.add_middleware(
     CORSMiddleware,
