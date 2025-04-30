@@ -1,40 +1,113 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>시트 불러오기</title>
+  <meta charset="utf-8" />
+  <title>Google 시트 검색</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #aaa;
+      padding: 6px;
+      text-align: center;
+    }
+    th {
+      background-color: #f3f3f3;
+    }
+    tr:hover {
+      background-color: #f9f9f9;
+    }
+    #searchBox {
+      margin: 10px 0;
+      padding: 5px;
+      width: 200px;
+    }
+    #columnSelect {
+      margin: 10px 0;
+      padding: 5px;
+    }
+  </style>
 </head>
 <body>
   <h1>Google 시트 데이터</h1>
-  <table border="1" id="dataTable"></table>
+
+  <label for="columnSelect">검색할 열:</label>
+  <select id="columnSelect"></select>
+
+  <input type="text" id="searchBox" placeholder="검색어 입력..." />
+
+  <table id="dataTable"></table>
 
   <script>
-    fetch("https://opensheet.elk.sh/1FzxaxY9bmx2lY9QXCPADwHuHKqwhlNr4Q0_D-r8SsvE/Sheet1")
+    let fullData = [];
+    let headers = [];
+
+    const SHEET_URL = "https://opensheet.elk.sh/1FzxaxY9bmx2lY9QXCPADwHuHKqwhlNr4Q0_D-r8SsvE/Sheet1";
+
+    const table = document.getElementById("dataTable");
+    const searchBox = document.getElementById("searchBox");
+    const columnSelect = document.getElementById("columnSelect");
+
+    fetch(SHEET_URL)
       .then(res => res.json())
       .then(data => {
-        const table = document.getElementById("dataTable");
-        if (data.length === 0) return;
+        fullData = data;
+        if (data.length === 0) {
+          table.innerHTML = "<tr><td>데이터 없음</td></tr>";
+          return;
+        }
 
-        // 헤더 생성
-        const headers = Object.keys(data[0]);
-        const headerRow = document.createElement("tr");
+        headers = Object.keys(data[0]);
+
+        // 드롭다운 옵션 채우기
         headers.forEach(header => {
-          const th = document.createElement("th");
-          th.innerText = header;
-          headerRow.appendChild(th);
+          const option = document.createElement("option");
+          option.value = header;
+          option.textContent = header;
+          columnSelect.appendChild(option);
         });
-        table.appendChild(headerRow);
 
-        // 데이터 생성
-        data.forEach(row => {
-          const tr = document.createElement("tr");
-          headers.forEach(header => {
-            const td = document.createElement("td");
-            td.innerText = row[header];
-            tr.appendChild(td);
-          });
-          table.appendChild(tr);
-        });
+        drawTable(data);
+
+        // 검색 이벤트 연결
+        searchBox.addEventListener("input", filterTable);
+        columnSelect.addEventListener("change", filterTable);
       });
+
+    function drawTable(data) {
+      table.innerHTML = "";
+      const headerRow = document.createElement("tr");
+      headers.forEach(header => {
+        const th = document.createElement("th");
+        th.innerText = header;
+        headerRow.appendChild(th);
+      });
+      table.appendChild(headerRow);
+
+      data.forEach(row => {
+        const tr = document.createElement("tr");
+        headers.forEach(header => {
+          const td = document.createElement("td");
+          td.innerText = row[header] || "";
+          tr.appendChild(td);
+        });
+        table.appendChild(tr);
+      });
+    }
+
+    function filterTable() {
+      const keyword = searchBox.value.toLowerCase();
+      const selectedColumn = columnSelect.value;
+
+      const filtered = fullData.filter(row => {
+        const cell = row[selectedColumn];
+        return cell && cell.toLowerCase().includes(keyword);
+      });
+
+      drawTable(filtered);
+    }
   </script>
 </body>
 </html>
