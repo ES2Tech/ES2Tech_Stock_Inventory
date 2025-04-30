@@ -28,7 +28,12 @@
       margin: 10px 0;
       padding: 5px;
     }
-  </style>
+  
+    tr.selected {
+      background-color: #d4f0ff !important;
+    }
+    </style>
+
 </head>
 <body>
   <h1>Google 시트 데이터</h1>
@@ -51,13 +56,13 @@
     <input placeholder="등록일 (YYYY-MM-DD)" id="date" />
     <input placeholder="비고(사유)" id="note" />
     <input placeholder="확인 여부" id="confirm" />
-  <button onclick="editRow()">수정</button>
     <button type="button" onclick="addRow()">추가</button>
   </form>
   
   <label for="columnSelect">검색할 열:</label>
   <select id="columnSelect"></select>
   <input type="text" id="searchBox" placeholder="검색어 입력..." />
+  <button onclick="editRow()">수정</button>
   <button onclick="refreshSheet()">새로고침</button>
 
   <table id="dataTable"></table>
@@ -114,7 +119,13 @@
           tr.appendChild(td);
         });
 
+        
         tr.addEventListener("click", () => {
+          // 이전 선택된 행 클래스 제거
+          document.querySelectorAll("#dataTable tr").forEach(row => row.classList.remove("selected"));
+          // 현재 클릭한 행에 강조 추가
+          tr.classList.add("selected");
+
           selectedRowIndex = index + 2;
           const cells = tr.querySelectorAll("td");
           originalValues = Array.from(cells).map(td => td.innerText.trim());
