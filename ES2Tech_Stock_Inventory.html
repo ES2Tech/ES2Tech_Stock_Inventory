@@ -1,10 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>테스트 웹</title>
+  <title>시트 불러오기</title>
 </head>
 <body>
-  <h1>안녕하세요, 제 웹페이지입니다!</h1>
-  <p>이건 GitHub Pages에서 호스팅 중입니다.</p>
+  <h1>Google 시트 데이터</h1>
+  <table border="1" id="dataTable"></table>
+
+  <script>
+    fetch("https://opensheet.elk.sh/시트ID/Sheet1")
+      .then(res => res.json())
+      .then(data => {
+        const table = document.getElementById("dataTable");
+        if (data.length === 0) return;
+
+        // 헤더 생성
+        const headers = Object.keys(data[0]);
+        const headerRow = document.createElement("tr");
+        headers.forEach(header => {
+          const th = document.createElement("th");
+          th.innerText = header;
+          headerRow.appendChild(th);
+        });
+        table.appendChild(headerRow);
+
+        // 데이터 생성
+        data.forEach(row => {
+          const tr = document.createElement("tr");
+          headers.forEach(header => {
+            const td = document.createElement("td");
+            td.innerText = row[header];
+            tr.appendChild(td);
+          });
+          table.appendChild(tr);
+        });
+      });
+  </script>
 </body>
 </html>
