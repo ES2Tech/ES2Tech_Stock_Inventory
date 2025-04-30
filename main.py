@@ -29,7 +29,7 @@ def edit_row(data: EditRequest):
 # CORS 설정 추가
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 또는 ["https://es2tech.github.io"]로 제한 가능
+    allow_origins=["https://es2tech.github.io"],  # 또는 로 제한 가능
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
