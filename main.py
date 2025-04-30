@@ -14,7 +14,7 @@ class EditRequest(BaseModel):
 
 @app.post("/edit")
 def edit_row(data: EditRequest):
-    service = get_service()  # Google API 인증 객체
+    service = build('sheets', 'v4', credentials=credentials)
     sheet_id = "YOUR_SHEET_ID"
     range_str = f"Sheet1!A{data.row_number}:R{data.row_number}"
 
