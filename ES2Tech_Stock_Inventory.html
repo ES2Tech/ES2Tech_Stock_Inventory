@@ -32,6 +32,27 @@
 </head>
 <body>
   <h1>Google 시트 데이터</h1>
+  <h2>장비 추가</h2>
+  <form id="addForm">
+  <input placeholder="BOX.No" id="boxNo" />
+  <input placeholder="담당부서" id="dept" />
+  <input placeholder="담당팀장" id="leader" />
+  <input placeholder="품목분류" id="category" />
+  <input placeholder="Vendor" id="vendor" />
+  <input placeholder="보관장소" id="storage" />
+  <input placeholder="Location" id="location" />
+  <input placeholder="현재 위치" id="position" />
+  <input placeholder="Product" id="product" />
+  <input placeholder="Serial" id="serial" />
+  <input placeholder="장비상태" id="status" />
+  <input placeholder="수량" id="qty" type="number" />
+  <input placeholder="현재수량" id="currentQty" type="number" />
+  <input placeholder="담당자" id="owner" />
+  <input placeholder="등록일 (YYYY-MM-DD)" id="date" />
+  <input placeholder="비고(사유)" id="note" />
+  <input placeholder="확인 여부" id="confirm" />
+  <button type="button" onclick="addRow()">추가</button>
+  </form>
 
   <label for="columnSelect">검색할 열:</label>
   <select id="columnSelect"></select>
@@ -111,25 +132,38 @@
 
       drawTable(filtered);
     }
-	async function addRow() {
-    const serial = document.getElementById("serial").value;
-    const product = document.getElementById("product").value;
-
+    async function addRow() {
     const values = [
-      "104", "기술2팀", "OOO", "Stock", "Cisco", "베란다", "-", "2003-2-3",
-      product, serial, "정상", 1, 1, "XXX", "2022-12-30", "테스트", "확인"
+      "-",  // No는 항상 "-"
+      document.getElementById("boxNo").value,
+      document.getElementById("dept").value,
+      document.getElementById("leader").value,
+      document.getElementById("category").value,
+      document.getElementById("vendor").value,
+      document.getElementById("storage").value,
+      document.getElementById("location").value,
+      document.getElementById("position").value,
+      document.getElementById("product").value,
+      document.getElementById("serial").value,
+      document.getElementById("status").value,
+      document.getElementById("qty").value,
+      document.getElementById("currentQty").value,
+      document.getElementById("owner").value,
+      document.getElementById("date").value,
+      document.getElementById("note").value,
+      document.getElementById("confirm").value
     ];
 
-    const response = await fetch("https://es2tech-stock-inventory.onrender.com/append", {
+    const res = await fetch("https://es2tech-stock-inventory.onrender.com/append", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ values })
     });
 
-    if (response.ok) {
-      alert("추가 성공!");
+    if (res.ok) {
+      alert("추가 완료!");
     } else {
-      alert("실패: " + response.statusText);
+      alert("추가 실패: " + res.statusText);
     }
   }
   </script>
