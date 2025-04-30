@@ -185,6 +185,14 @@
         return;
       }
 
+    const now = new Date();
+    const nowFormatted = now.getFullYear() + "-" +
+    String(now.getMonth() + 1).padStart(2, "0") + "-" +
+    String(now.getDate()).padStart(2, "0") + " " +
+    String(now.getHours()).padStart(2, "0") + ":" +
+    String(now.getMinutes()).padStart(2, "0") + ":" +
+    String(now.getSeconds()).padStart(2, "0");
+
       const values = [
         originalValues[0],
         getInputOrOriginal("boxNo", 1),
@@ -201,7 +209,7 @@
         getInputOrOriginal("qty", 12),
         getInputOrOriginal("currentQty", 13),
         getInputOrOriginal("owner", 14),
-        getInputOrOriginal("date", 15),
+        nowFormatted,
         getInputOrOriginal("note", 16),
         getInputOrOriginal("confirm", 17)
       ];
@@ -221,6 +229,14 @@
     }
 
     async function addRow() {
+          const now = new Date();
+    const nowFormatted = now.getFullYear() + "-" +
+    String(now.getMonth() + 1).padStart(2, "0") + "-" +
+    String(now.getDate()).padStart(2, "0") + " " +
+    String(now.getHours()).padStart(2, "0") + ":" +
+    String(now.getMinutes()).padStart(2, "0") + ":" +
+    String(now.getSeconds()).padStart(2, "0");
+      
       const values = [
         "-",
         getValueOrDash("boxNo"),
@@ -237,7 +253,7 @@
         getValueOrDash("qty"),
         getValueOrDash("currentQty"),
         getValueOrDash("owner"),
-        getValueOrDash("date"),
+        nowFormatted
         getValueOrDash("note"),
         getValueOrDash("confirm")
       ];
