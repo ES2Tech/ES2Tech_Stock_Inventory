@@ -19,7 +19,7 @@ def edit_row(data: EditRequest):
     range_str = f"Sheet1!A{data.row_number}:R{data.row_number}"
 
     result = service.spreadsheets().values().update(
-        spreadsheetId=sheet_id,
+        spreadsheetId=SPREADSHEET_ID,
         range=range_str,
         valueInputOption="USER_ENTERED",
         body={"values": [data.values]}
