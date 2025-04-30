@@ -61,6 +61,7 @@
   <input id="serial" placeholder="Serial 번호" />
   <input id="product" placeholder="Product" />
   <button onclick="addRow()">추가</button>
+  <button onclick="forceRefresh()">새로고침</button>
 
   <table id="dataTable"></table>
 
@@ -137,6 +138,10 @@
   const value = document.getElementById(id).value;
   return value.trim() === "" ? "-" : value.trim();
     }
+
+    function forceRefresh() {
+    location.href = location.href.split('?')[0] + "?r=" + new Date().getTime();
+  }
     
     async function addRow() {
     const values = [
@@ -168,6 +173,7 @@
 
     if (res.ok) {
       alert("추가 완료!");
+       location.href = location.href.split('?')[0] + "?t=" + new Date().getTime();
     } else {
       alert("추가 실패: " + res.statusText);
     }
