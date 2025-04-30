@@ -32,6 +32,11 @@
     tr.selected {
       background-color: #d4f0ff !important;
     }
+
+    input:disabled {
+    background-color: #d3d3d3;  /* 진한 회색 */
+    color: #555;                /* 텍스트 색상도 어둡게 */
+  }
     </style>
 
 </head>
@@ -53,7 +58,7 @@
     <input placeholder="수량" id="qty" type="number" />
     <input placeholder="현재수량" id="currentQty" type="number" />
     <input placeholder="담당자" id="owner" />
-    <input placeholder="등록일 (YYYY-MM-DD)" id="date" />
+    <input placeholder="(YYYY-MM-DD)자동기록" id="date" disabled />
     <input placeholder="비고(사유)" id="note" />
     <input placeholder="확인 여부" id="confirm" />
     <button type="button" onclick="addRow()">추가</button>
