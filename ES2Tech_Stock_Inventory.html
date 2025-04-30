@@ -57,12 +57,12 @@
     <input placeholder="비고(사유)" id="note" />
     <input placeholder="확인 여부" id="confirm" />
     <button type="button" onclick="addRow()">추가</button>
+  <button onclick="editRow()">수정</button>
   </form>
   
   <label for="columnSelect">검색할 열:</label>
   <select id="columnSelect"></select>
   <input type="text" id="searchBox" placeholder="검색어 입력..." />
-  <button onclick="editRow()">수정</button>
   <button onclick="refreshSheet()">새로고침</button>
 
   <table id="dataTable"></table>
