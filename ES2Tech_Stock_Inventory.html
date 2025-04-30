@@ -57,7 +57,7 @@
   <label for="columnSelect">검색할 열:</label>
   <select id="columnSelect"></select>
   <input type="text" id="searchBox" placeholder="검색어 입력..." />
-  
+  <button onclick="editRow()">수정</button>
   <button onclick="refreshSheet()">새로고침</button>
 
   <table id="dataTable"></table>
@@ -65,13 +65,56 @@
   <script>
     let fullData = [];
     let headers = [];
+	let selectedRowIndex = null;  // 클릭한 행 번호 (Google Sheets는 1부터 시작)
+	let originalValues = [];
 
     const SHEET_URL = "https://opensheet.elk.sh/1FzxaxY9bmx2lY9QXCPADwHuHKqwhlNr4Q0_D-r8SsvE/Sheet1";
 
     const table = document.getElementById("dataTable");
     const searchBox = document.getElementById("searchBox");
     const columnSelect = document.getElementById("columnSelect");
+	
+	
+	document.addEventListener("DOMContentLoaded", () => {
+  const rows = document.querySelectorAll("#dataTable tbody tr");
 
+  rows.forEach((row, index) => {
+    row.addEventListener("click", () => {
+      // ✅ 1. Google Sheets에서 2행부터 시작 (헤더 제외)
+      selectedRowIndex = index + 2;
+
+      // ✅ 2. 모든 셀 값을 저장
+      const cells = row.querySelectorAll("td");
+      originalValues = Array.from(cells).map(td => td.innerText.trim());
+
+      // ✅ 3. 입력 필드 자동 채우기
+      document.getElementById("boxNo").value     = originalValues[1] || "";
+      document.getElementById("dept").value      = originalValues[2] || "";
+      document.getElementById("leader").value    = originalValues[3] || "";
+      document.getElementById("category").value  = originalValues[4] || "";
+      document.getElementById("vendor").value    = originalValues[5] || "";
+      document.getElementById("storage").value   = originalValues[6] || "";
+      document.getElementById("location").value  = originalValues[7] || "";
+      document.getElementById("position").value  = originalValues[8] || "";
+      document.getElementById("product").value   = originalValues[9] || "";
+      document.getElementById("serial").value    = originalValues[10] || "";
+      document.getElementById("status").value    = originalValues[11] || "";
+      document.getElementById("qty").value       = originalValues[12] || "";
+      document.getElementById("currentQty").value= originalValues[13] || "";
+      document.getElementById("owner").value     = originalValues[14] || "";
+      document.getElementById("date").value      = originalValues[15] || "";
+      document.getElementById("note").value      = originalValues[16] || "";
+      document.getElementById("confirm").value   = originalValues[17] || "";
+    });
+  });
+});
+
+
+function getInputOrOriginal(id, index) {
+  const input = document.getElementById(id).value.trim();
+  return input === "" ? originalValues[index] || "-" : input;
+}
+	
     fetch(SHEET_URL)
       .then(res => res.json())
       .then(data => {
@@ -140,7 +183,49 @@
     // 전체 페이지 강제 새로고침 (캐시 무시)
     location.href = location.href.split('?')[0] + "?t=" + Date.now();
   }
-    
+  
+    async function editRow() {
+    if (!selectedRowIndex) {
+      alert("수정할 행을 먼저 선택하세요.");
+      return;
+    }
+	const values = [
+    originalValues[0],  // No
+    getInputOrOriginal("boxNo", 1),
+    getInputOrOriginal("dept", 2),
+    getInputOrOriginal("leader", 3),
+    getInputOrOriginal("category", 4),
+    getInputOrOriginal("vendor", 5),
+    getInputOrOriginal("storage", 6),
+    getInputOrOriginal("location", 7),
+    getInputOrOriginal("position", 8),
+    getInputOrOriginal("product", 9),
+    getInputOrOriginal("serial", 10),
+    getInputOrOriginal("status", 11),
+    getInputOrOriginal("qty", 12),
+    getInputOrOriginal("currentQty", 13),
+    getInputOrOriginal("owner", 14),
+    getInputOrOriginal("date", 15),
+    getInputOrOriginal("note", 16),
+    getInputOrOriginal("confirm", 17)
+  ];
+      const res = await fetch("https://es2tech-stock-inventory.onrender.com/edit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        row_number: selectedRowIndex,
+        values: values
+      })
+    });
+	
+	if (res.ok) {
+    alert("수정 완료!");
+    location.href = location.href.split("?")[0] + "?t=" + Date.now();
+  } else {
+    alert("수정 실패: " + res.statusText);
+  }
+	
+	}
     async function addRow() {
     const values = [
       "-",  // No는 항상 "-"
