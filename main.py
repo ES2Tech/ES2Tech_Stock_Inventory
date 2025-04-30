@@ -2,10 +2,20 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
+from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
 
 app = FastAPI()
+
+# CORS 설정 추가
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 또는 ["https://es2tech.github.io"]로 제한 가능
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # 환경변수에서 인증 정보 가져오기
 credentials_info = json.loads(os.environ["GOOGLE_CREDENTIALS_JSON"])
