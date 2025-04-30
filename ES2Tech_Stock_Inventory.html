@@ -58,7 +58,8 @@
   <select id="columnSelect"></select>
   <input type="text" id="searchBox" placeholder="검색어 입력..." />
   
-  <button onclick="forceRefresh()">새로고침</button>
+  <iframe id="sheetFrame" src="https://docs.google.com/spreadsheets/d/e/your_pubhtml_link/pubhtml?widget=true&headers=false" width="100%" height="600"></iframe>
+  <button onclick="refreshSheet()">새로고침</button>
 
   <table id="dataTable"></table>
 
@@ -136,8 +137,9 @@
   return value.trim() === "" ? "-" : value.trim();
     }
 
-    function forceRefresh() {
-    location.href = location.href.split('?')[0] + "?r=" + new Date().getTime();
+    function refreshSheet() {
+    const frame = document.getElementById("sheetFrame");
+    frame.src = frame.src.split('?')[0] + "?widget=true&headers=false&t=" + new Date().getTime();
   }
     
     async function addRow() {
@@ -167,10 +169,12 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ values })
     });
-
+      
     if (res.ok) {
       alert("추가 완료!");
-       location.href = location.href.split('?')[0] + "?t=" + new Date().getTime();
+      const frame = document.getElementById("sheetFrame");
+      const cleanSrc = frame.src.split("?")[0];
+      frame.src = `${cleanSrc}?widget=true&headers=false&t=${Date.now()}`;
     } else {
       alert("추가 실패: " + res.statusText);
     }
